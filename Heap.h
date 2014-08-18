@@ -29,7 +29,7 @@ namespace Continers
 			if (heapType == MIN_HEAP)
 				mComparator = std::less_equal<T>();
 			else
-				mComparator = std::greater<T>();
+				mComparator = std::greater_equal<T>();
 		}
 
 		std::vector<T>& data() { return mData; }

@@ -23,6 +23,8 @@ namespace Continers
 	class Heap
 	{
 	public:
+		typedef std::vector<T> CollectionType;
+
 		Heap(HeapType heapType) : mHeapType(heapType)
 		{
 			mData.resize(1);
@@ -32,38 +34,39 @@ namespace Continers
 				mComparator = std::greater_equal<T>();
 		}
 
-		std::vector<T>& data() { return mData; }
+		CollectionType& data() { return mData; }
 
 		U32 size() { return mData.size() - 1; }
 
 		// push new elem into heap
-		void push(T elem)
+		T& push(T elem)
 		{
 			if (mData.size() <= 1)
 			{
-				mData.insert(mData.begin() + 1, elem);
+				CollectionType::iterator ret = mData.insert(mData.begin() + 1, elem);
+				return *ret;
 			}
 			else
 			{
 				mData.push_back(elem);
-				bubbleUp(mData.size() - 1);
+				return bubbleUp(mData.size() - 1);
 			}
 		}
 
 		// pop off top element from heap
 		T pop()
 		{
-			if (size() < 1)
-				return T();
+			if (size() <= 1)
+				return mData[0];
 			size_t heapSize = mData.size();
-			T ret = *(mData.begin() + 1);
+			T ret = mData[1];
 			std::swap(mData.back(), mData[1]);
 			mData.erase(mData.end() - 1);
 			percolateDown(1);
 			return ret;
 		}
 
-		T& top() { return mData.front() + 1; }
+		T& top() { return mData[1]; }
 
 		void printHeap()
 		{
@@ -75,10 +78,10 @@ namespace Continers
 		}
 	private:
 		HeapType mHeapType;
-		std::vector<T> mData;
+		CollectionType mData;
 		std::function<bool (T, T)> mComparator;
 
-		void bubbleUp(size_t idx)
+		T& bubbleUp(size_t idx)
 		{
 			size_t parent = (size_t)std::floor(idx / 2);
 			while (parent >= 1 && mComparator(mData[idx], mData[parent]))
@@ -87,6 +90,8 @@ namespace Continers
 				idx = parent;
 				parent = (size_t)std::floor(parent / 2);
 			}
+
+			return mData[idx];
 		}
 
 		void percolateDown(size_t idx)

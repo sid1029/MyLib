@@ -2,40 +2,52 @@
 #define MATRIX2D_H
 
 #include "CoreTypes.h"
+#include <string>
 
 namespace core {
 
-	class Matrix {
+	template <typename T>
+	class Matrix
+	{
 	public:
-		Matrix();
+		Matrix() : mRows(), mColumns(), mElems(NULL) {};
 
-		Matrix(U64 rows, U64 columns) : mRows(rows), mColumns(columns), mElems(new U64[rows * columns]) {}
+		Matrix(size_t rows, size_t columns) : mRows(rows), mColumns(columns), mElems(new T[rows * columns]()) {}
+
+		void allocate(size_t rows, size_t columns)
+		{
+			mRows = rows;
+			mColumns = columns;
+			mElems = new T[rows * columns];
+		}
 
 		~Matrix() {delete[] mElems;}
 
-		void InitWithRandom();
-		U64* operator[](const U64 row) // Setter
+		inline T* operator[](const size_t row) // Setter
 		{
 			return mElems + (row*mColumns);
-		};
+		}
 
-		const U64* operator[](const U64 row) const // Getter
+		inline const T* operator[](const size_t row) const // Getter
 		{
 			return mElems + (row*mColumns);
-		};
+		}
 
-		U64 getRows() { return mRows; }
+		inline int getRows() { return mRows; }
 
-		U64 getColumns() { return mColumns; }
+		inline int getColumns() { return mColumns; }
+
+		inline T* data() { return mElems; }
 
 		void print();
+
+		void InitWithRandom();
 	private:
-		U64 mRows, mColumns;
-		U64* mElems;
+		size_t mRows, mColumns;
+		T* mElems;
 	};
 
-	U64 MaxApplesExhaustive(Matrix& m, U64 i, U64 j);
-	void PrintRW();
+	typedef core::Matrix<int> Grid;
 }
 
 #endif // MATRIX2D_H

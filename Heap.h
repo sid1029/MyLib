@@ -66,7 +66,7 @@ namespace Continers
 			return ret;
 		}
 
-		T& top() { return mData[1]; }
+		T& top() { return size() == 0 ? mData[0] : mData[1]; }
 
 		void printHeap()
 		{

@@ -24,6 +24,13 @@ namespace Continers
 	{
 	public:
 		typedef std::vector<T> CollectionType;
+		typedef std::function<bool (T, T)> CompareFunc;
+
+		Heap(CompareFunc comparer) : mHeapType(MIN_HEAP)
+		{
+			mData.resize(1);
+			mComparator = comparer;
+		}
 
 		Heap(HeapType heapType) : mHeapType(heapType)
 		{
@@ -79,7 +86,7 @@ namespace Continers
 	private:
 		HeapType mHeapType;
 		CollectionType mData;
-		std::function<bool (T, T)> mComparator;
+		CompareFunc mComparator;
 
 		T& bubbleUp(size_t idx)
 		{
